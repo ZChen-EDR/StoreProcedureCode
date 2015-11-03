@@ -1,13 +1,18 @@
 Delimiter //
-DROP PROCEDURE IF EXISTS copyLanguageItemToHistory;
-CREATE PROCEDURE copyLanguageItemToHistory(  IN accountID BIGINT,
-                                             IN accountGUIDBinary Binary(16),
-                                             IN languageGuidBinary Binary(16))
+CREATE  PROCEDURE `copyAllLanguageItemToDeleted`(IN `accountID` BIGINT, 
+	                                              IN `accountGUIDBinary` Binary(16), 
+																 IN `languageLibraryGuid` Binary(16))
+	COMMENT ''
 BEGIN
        SET @accountID = accountID;
        SET @accountGuidBinary = accountGUIDBinary;
+       
+       SELECT dll.DefaultLanguageLibraryID
+       INTO @libraryID
+       FROM PARCEL.DefaultLanguageLibrary dll
+       WHERE dll.DefaultLanguageLibaryGuidBinary = languageLibraryGuid;
 
-       INSERT INTO PARCEL.DefaultLanguageItemHistory (DefaultLanguageItemID,
+       INSERT INTO PARCEL.DefaultLanguageItemDeleted (DefaultLanguageItemID,
                                                       DefaultLanguageItemGuidBinary,
                                                       LanguageText,
                                                       CategoryTypeCode,
@@ -30,8 +35,7 @@ BEGIN
                                                     dli.SectionID,
                                                     dli.DefaultLanguageLibraryID
                                              FROM PARCEL.DefaultLanguageItem dli
-                                             WHERE dli.DefaultLanguageItemGuidBinary = languageGuidBinary;
+                                             WHERE dli.DefaultLanguageLibraryID = @libraryID;
 
-              
 END //
 Delimiter ;

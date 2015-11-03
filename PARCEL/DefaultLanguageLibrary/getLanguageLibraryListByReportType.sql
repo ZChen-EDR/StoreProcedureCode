@@ -1,6 +1,7 @@
 Delimiter //
-DROP PROCEDURE IF EXISTS getLanguageLibraryListByCompany;
-CREATE PROCEDURE `getLanguageLibraryListByCompany`(IN `ownerCompanyGuid` VARCHAR(32))
+DROP PROCEDURE IF EXISTS getLanguageLibraryListByReportType;
+CREATE PROCEDURE `getLanguageLibraryListByReportType`(IN `ownerCompanyGuid` VARCHAR(32),
+                                                      IN `reportTypeID` BIGINT)
 	COMMENT 'Retrieve all the Language Library for a particular company and the Libraries owned by other companies which this company has access to'
 BEGIN
 
@@ -32,7 +33,8 @@ FROM       PARCEL.DefaultLanguageLibrary defl,
 WHERE      rt.ReportTypeID = defl.ReportTypeID AND
            defl.IsLibraryDisabled = 0 AND
            (defl.OwnerCompanyGuidBinary = @ownerGuidBinary  OR 
-				defl.OwnerCompanyID = 0);
+				defl.OwnerCompanyID = 0) AND
+				defl.ReportTypeID = reportTypeID;
 
 
 END //

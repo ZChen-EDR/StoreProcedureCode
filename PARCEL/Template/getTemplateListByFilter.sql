@@ -1,16 +1,21 @@
 Delimiter //
 DROP PROCEDURE IF EXISTS getTemplateListByFilter;
-CREATE PROCEDURE getTemplateListByFilter(IN filterID BIGINT,
-                                         IN `reportTypeID` BIGINT)
+CREATE PROCEDURE getTemplateListByFilter(IN filterID BIGINT)
 BEGIN
       SELECT pt.TemplateID as templateID,
-             pt.Name as templateName
+             PARCEL.binaryToGuid(pt.TemplateGuidBinary) as templateGuid,
+             pt.Name as templateName,
+             pt.ReportTypeID as reportTypeID,
+             rt.Name as reportName,
+             rt.Value as reportValue
       FROM PARCEL.Template pt,
+           PARCEL.ReportType rt,
            PARCEL.TemplateFilter ptf,
            PARCEL.FilterTemplate pft
       WHERE pt.TemplateID = pft.TemplateID AND
-            pft.TemplateFilterID = ptf.TemplateFilterID AND
-				pt.ReportTypeID = reportTypeID AND
-				pt.IsTemplateDisabled = 0;
+            ptf.TemplateFilterID = pft.TemplateFilterID AND
+				pt.ReportTypeID = rt.reportTypeID AND
+				pt.IsTemplateDisabled = 0 AND
+				ptf.TemplateFilterID = filterID;
 END //
 Delimiter;

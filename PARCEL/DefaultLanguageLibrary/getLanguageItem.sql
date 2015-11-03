@@ -7,12 +7,15 @@ BEGIN
      SELECT   dli.DefaultLanguageItemID as defaultLanguageItemID,
 	           dli.DefaultLanguageItemGuidBinary as defaultLanguageItemGuid,
 	           dli.LanguageText as languageText,
+	           lcv.LocalCodeValueID as categoryID,
 	           lcv.CodeValueShortName as categoryValue,
 	           lcv.CodeValueName as categoryName,
 	           dli.TitleKeyword as titleKeyword,
 	           dli.ShowInPage as showInPage,
 	           dli.OrderIndex as orderIndex,
-	           dli.ModifiedTimestamp as lastModifiedTimestamp
+	           dli.ModifiedTimestamp as lastModifiedTimestamp,
+	           dli.SectionID as sectionID,
+              dli.DefaultLanguageLibraryID as defaultLanguageLibraryID
            
      FROM PARCEL.DefaultLanguageItem dli 
 			 LEFT JOIN
